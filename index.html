@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JavaScript Event Demo</title>
+		<link rel="stylesheet" type="text/css" href="normalize.css" />
+		<style>
+			body { background-color: #efefef; line-height: 25px; }
+			#container { background-color: #ddd; width: 900px; margin: 50px auto; }
+			#demo { width: 270px; float: left; background-color: white; box-shadow: 0 1px 3px #999 inset; border-radius: 10px; border-bottom: 1px solid white; padding: 25px 30px 30px; font-weight: bold; }
+			#data { width: 510px; float: right; background-color: white; box-shadow: 0 1px 3px #999 inset; border-radius: 10px; border-bottom: 1px solid white; padding: 20px 20px 10px; }
+			#demo div { padding: 20px 30px 30px 15px; border: 1px solid #666; box-shadow: 1px 1px 3px #777; border-radius: 5px; }
+			#demo div:hover { cursor: pointer; }
+			#demo .div-1 { background-color: #ccc; margin-top: 15px; }
+			#demo .div-2 { background-color: #ddd; margin-top: 20px; }
+			#demo .div-3 { background-color: #eee; margin-top: 20px; }
+			h4 { margin: 0 0 10px; }
+			hr { margin: 0; }
+			code { font-size: 13px; font-weight: bold; margin-left: 20px; display: block; }
+			code span { background-color: #aea; font-size: 15px; border-radius: 3px; padding: 0 5px; }
+			.wrapper { overflow: hidden; }
+			.panel { float: left; width: 50%;}
+			.panel code span { background-color: #fd8; padding: 0; }
+			.footnote { margin-top: 5px; font-size: 11px; color: #666; }
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="demo" class="div-0">div-0
+				<div class="div-1">div-1
+					<div class="div-2">div-2
+						<div class="div-3">div-3
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="data">
+				<h4>Observed events</h4>
+				<code>
+					var events = 'click mouseover mouseout';<br/>
+					<span>$('.div-1').on(events, testOne);</span><br/>
+					<span>$('.div-0').on(events, '.div-1', testTwo);</span><br/>
+				</code>
+				<br/>
+				<hr/>
+				<br/>
+				<div class="wrapper">
+					<div class="panel">
+						<h4>Inside function testOne (e)</h4>
+						<code>
+							e.currentTarget = <span id="t1-currentTarget">?</span><br/>
+							e.delegateTarget = <span id="t1-delegateTarget">?</span><br/>
+							e.relatedTarget = <span id="t1-relatedTarget">?</span><br/>
+							e.target = <span id="t1-target">?</span><br/>
+							e.type = <span id="t1-type">?</span><br/>
+						</code>
+					</div>
+					<div class="panel">
+						<h4>Inside function testTwo (e)</h4>
+						<code>
+							e.currentTarget = <span id="t2-currentTarget">?</span><br/>
+							e.delegateTarget = <span id="t2-delegateTarget">?</span><br/>
+							e.relatedTarget = <span id="t2-relatedTarget">?</span><br/>
+							e.target = <span id="t2-target">?</span><br/>
+							e.type = <span id="t2-type">?</span><br/>
+						</code>
+					</div>
+				</div>
+				<br/>
+				<hr/>
+				<div class="footnote">Note: e.delegateTarget is a jQuery event property; it is not present in native JavaScript</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="jquery-1.8.2.js"></script>
+		<script>
+			
+			var events = 'click mouseover mouseout';
+			$('.div-1').on(events, testOne);
+			$('.div-0').on(events, '.div-1', testTwo);
+			
+			function testOne(e) {
+				$('#t1-currentTarget').text(e.currentTarget.className);
+				$('#t1-delegateTarget').text(e.delegateTarget.className);
+				$('#t1-relatedTarget').text(e.relatedTarget ? (e.relatedTarget.className.indexOf('div-') == 0 ? e.relatedTarget.className : '') : 'null');
+				$('#t1-target').text(e.target.className);
+				$('#t1-type').text(e.type);
+			}
+			
+			function testTwo(e) {
+				$('#t2-currentTarget').text(e.currentTarget.className);
+				$('#t2-delegateTarget').text(e.delegateTarget.className);
+				$('#t2-relatedTarget').text(e.relatedTarget ? (e.relatedTarget.className.indexOf('div-') == 0 ? e.relatedTarget.className : '') : 'null');
+				$('#t2-target').text(e.target.className);
+				$('#t2-type').text(e.type);
+			}
+			
+			$('#demo div').on('mouseover', function(e) {
+				resetDemo();
+				$(e.target).css({
+					'border': '1px solid darkOrange',
+					'box-shadow': '1px 1px 3px #333, 0 0 20px 3px orange inset'
+				});
+			});
+			
+			$('#demo div').on('mouseout', resetDemo);
+			
+			function resetDemo() {
+				$('#demo div').css({
+					'border': '1px solid #666',
+					'box-shadow': '1px 1px 3px #777'
+				});
+			}
+			
+		</script>
+	</body>
+</html>
